@@ -1,0 +1,230 @@
+openapi: 3.0.0
+info:
+  title: learn express and swagger - admin
+  description: Just exploring swagger
+  version: 1.1.0
+  contact:
+    email: admin@admin.com
+    url: "http://admin.com"
+
+# servers:
+#   - url: "http://localhost:5000/api/v1" 
+#     description: local url
+#   - url: "https://localhost:5000/api/v1" 
+#     description: secure url
+
+servers:
+  - url: "{protocols}://localhost:5000/api/{versions}" 
+    description: localhost url 
+    variables: 
+      versions:
+        enum:
+          - v1
+          - v2
+        default: v1
+      protocols:
+        enum:
+          - http
+          - htpps
+        default: http
+      
+components:
+  securitySchemes:
+    cookieAuth:        
+      type: apiKey
+      in: cookie
+      name: jwtoken
+    BearerAuth:
+      type: http
+      scheme: bearer
+    
+paths:
+  /lco:
+    get:
+      tags: 
+        - string
+      summary: returns a data from LCO
+      responses: 
+        200: 
+          description: All good SUCCESS
+          content: 
+            application/json:
+              schema:
+                type: string
+                example: "mystring"
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
+
+  /newcourse:
+    get:
+      tags: 
+        - object
+      summary: returns a new course 
+      responses: 
+        200: 
+          description: All good SUCCESS
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  id: 
+                    type: string
+                  name: 
+                    type: string
+                  price: 
+                    type: number
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
+
+  /courses:
+    get:
+      tags: 
+        - array
+      summary: returns all courses
+      responses: 
+        200: 
+          description: All good SUCCESS
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties: 
+                    id: 
+                      type: string
+                    name: 
+                      type: string
+                    price: 
+                      type: number
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
+
+  /mycourses/{courseId}:
+    get:
+      tags: 
+        - string
+      summary: returns params
+      parameters: 
+        - name: courseId
+          in: path
+          required: true
+          default: 2
+          schema: 
+            type: string
+      responses: 
+        200: 
+          description: All good SUCCESS
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  id: 
+                    type: string
+                  name: 
+                    type: string
+                  price: 
+                    type: number
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
+
+  /addcourse:
+    post:
+      tags: 
+        - string
+      summary: returns adding a new course
+      consumes:
+        - application/json
+      produces: 
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                id: 
+                  type: string
+                name: 
+                  type: string
+                price: 
+                  type: number
+      responses: 
+        200: 
+          description: All good SUCCESS
+          content: 
+            application/json:
+              schema:
+                type: boolean
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
+
+  /coursequery:
+      get:
+        tags: 
+          - string
+        summary: returns adding a new course
+        parameters:
+          - name: location
+            in: query
+            required: true
+            schema: 
+              type: string
+              enum: [mumbai, delhi, pune]
+          - name: device
+            in: query
+            required: true
+            schema: 
+              type: string
+              enum: [web, mobile]
+        responses: 
+          200: 
+            description: All good SUCCESS
+            content: 
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    location:
+                      type: string
+                    device:
+                      type: string
+          400:
+            description: bad req 
+          500: 
+            description: Internal server error
+
+  /courseupload:
+    post:
+      tags: 
+        - string
+      summary: uploading image
+      requestBody:
+        content:
+          multipart/formdata:
+            schema:
+              type: object
+              properties:
+                file: 
+                  type: string
+                  format: binary
+      responses: 
+        200: 
+          description: All good SUCCESS
+        400:
+          description: bad req 
+        500: 
+          description: Internal server error
